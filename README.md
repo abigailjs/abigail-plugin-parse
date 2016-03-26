@@ -1,0 +1,64 @@
+Abigail Parse Plugin
+---
+
+<p align="right">
+  <a href="https://npmjs.org/package/abigail-plugin-parse">
+    <img src="https://img.shields.io/npm/v/abigail-plugin-parse.svg?style=flat-square">
+  </a>
+  <a href="https://travis-ci.org/abigailjs/abigail-plugin-parse">
+    <img src="http://img.shields.io/travis/abigailjs/abigail-plugin-parse.svg?style=flat-square">
+  </a>
+  <a href="https://codeclimate.com/github/abigailjs/abigail-plugin-parse/coverage">
+    <img src="https://img.shields.io/codeclimate/github/abigailjs/abigail-plugin-parse.svg?style=flat-square">
+  </a>
+  <a href="https://codeclimate.com/github/abigailjs/abigail-plugin-parse">
+    <img src="https://img.shields.io/codeclimate/coverage/github/abigailjs/abigail-plugin-parse.svg?style=flat-square">
+  </a>
+  <a href="https://gemnasium.com/abigailjs/abigail-plugin-parse">
+    <img src="https://img.shields.io/gemnasium/abigailjs/abigail-plugin-parse.svg?style=flat-square">
+  </a>
+</p>
+
+No installation
+---
+> abigail built-in plugin
+
+Usage
+---
+this plugin is parser body. when receiving the `parse` event of abigail.
+currently, the option are undefined. __please don't disable this plugin__, launch doesn't work correctly.
+
+in your plugin, if the task is to be changed at any time, you can change the task after getting the instance using this.getPlugin.
+
+```js
+import { scripts } from './package.json';
+class YourPlugin extends Plugin {
+  pluginWillAttach() {
+    const parsePlugin = this.getPlugin('parse');
+    this.setProps({ task: parsePlugin.parse(['test,', 'lint'], scripts) });
+  }
+}
+```
+
+See also
+---
+* [abigailjs/abigail](https://github.com/abigailjs/abigail#usage)
+* [abigailjs/abigail-plugin](https://github.com/abigailjs/abigail-plugin#usage)
+
+Development
+---
+Requirement global
+* NodeJS v5.7.0
+* Npm v3.7.1
+
+```bash
+git clone https://github.com/abigailjs/abigail-plugin-parse
+cd abigail-plugin-parse
+npm install
+
+npm test
+```
+
+License
+---
+[MIT](http://abigailjs.mit-license.org/)
