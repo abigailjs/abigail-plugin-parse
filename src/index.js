@@ -23,6 +23,9 @@ export default class Parse extends Plugin {
       if (existsSerialPrev || canSerialJoin) {
         nextSerial = false;
         normalized[normalized.length - 1] += `,${name}`;
+        if (arg.slice(-1) === ',') {
+          nextSerial = true;
+        }
         return;
       }
 
