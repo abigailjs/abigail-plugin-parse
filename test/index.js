@@ -26,22 +26,22 @@ describe('Parse', () => {
 
   describe('.normalize', () => {
     it('comma should be converted to one of the command linked', () => {
-      const expected = 'test1,test2';
+      const expected = 'test1,test2,test3';
 
       let normalize;
-      normalize = Parse.normalize(['test1,', 'test2']).join(' ');
+      normalize = Parse.normalize(['test1,', 'test2,', 'test3']).join(' ');
       assert(normalize === expected);
-      normalize = Parse.normalize(['test1', ',test2']).join(' ');
+      normalize = Parse.normalize(['test1', ',test2', ',test3']).join(' ');
       assert(normalize === expected);
-      normalize = Parse.normalize(['test1', ',', 'test2']).join(' ');
+      normalize = Parse.normalize(['test1', ',', 'test2', ',', 'test3']).join(' ');
       assert(normalize === expected);
-      normalize = Parse.normalize(['test1,test2', '']).join(' ');
+      normalize = Parse.normalize(['test1,test2,test3', '']).join(' ');
       assert(normalize === expected);
-      normalize = Parse.normalize(['test1,test2', ',', ',']).join(' ');
+      normalize = Parse.normalize(['test1,test2,test3', ',', ',']).join(' ');
       assert(normalize === expected);
 
       // do not change a quoted shell script eg "test , test"
-      normalize = Parse.normalize(['test , test']).join(' ');
+      normalize = Parse.normalize(['test , test , test']).join(' ');
       assert(normalize !== expected);
     });
   });
@@ -83,11 +83,24 @@ describe('Parse', () => {
     });
 
     it('comma should be pushed in the 2d of the array', () => {
-      const task = Parse.parse(['test1', ',', 'test2'], scripts);
-
-      assert(flattenDeep(task).length === 2);
+      let task;
+      task = Parse.parse(['test1', ',', 'test2', ',', 'test3'], scripts);
+      assert(flattenDeep(task).length === 3);
       assert(task[0][0][0].main.name === 'test1');
       assert(task[0][1][0].main.name === 'test2');
+      assert(task[0][2][0].main.name === 'test3');
+
+      task = Parse.parse(['test1,', 'test2,', 'test3'], scripts);
+      assert(flattenDeep(task).length === 3);
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][1][0].main.name === 'test2');
+      assert(task[0][2][0].main.name === 'test3');
+
+      task = Parse.parse(['test1', ',test2', ',test3'], scripts);
+      assert(flattenDeep(task).length === 3);
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][1][0].main.name === 'test2');
+      assert(task[0][2][0].main.name === 'test3');
     });
 
     it('pre, post should be defined in the same name field', () => {
@@ -97,14 +110,6 @@ describe('Parse', () => {
       assert(task[0][0][0].pre.name === 'preother');
       assert(task[0][0][0].main.name === 'other');
       assert(task[0][0][0].post.name === 'postother');
-    });
-
-    it('comma should be pushed in the 2d of the array', () => {
-      const task = Parse.parse(['test1', ',', 'test2'], scripts);
-
-      assert(flattenDeep(task).length === 2);
-      assert(task[0][0][0].main.name === 'test1');
-      assert(task[0][1][0].main.name === 'test2');
     });
 
     it('should processed in parallel unless adjacent to comma(in 1d of the array)', () => {
