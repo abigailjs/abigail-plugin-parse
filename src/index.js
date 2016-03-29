@@ -118,11 +118,15 @@ export default class Parse extends Plugin {
   * @constructor
   * @extends Plugin
   */
-  constructor(...props) {
-    super(...props);
+  constructor(...args) {
+    super(...args);
 
-    this.subscribe('parse', (...args) => {
-      this.setProps({ task: this.constructor.parse(...args) });
+    this.subscribe('parse', () => {
+      const props = this.getProps();
+      const argv = props.globs;
+      const scripts = props.json.data.scripts;
+      const task = this.constructor.parse(argv, scripts);
+      this.setProps({ task });
     });
   }
 }

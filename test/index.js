@@ -13,11 +13,20 @@ import { scripts } from './fixtures/package.json';
 // specs
 describe('Parse', () => {
   describe('plugin lifecycle', () => {
-    it('waiting to `parse`, should be immediately obtained the task using getProps', () => {
+    it('if fired `parse`, should be get the globs and scripts, and set the analysis results as the task', () => {
       const emitter = new AsyncEmitter;
       const parse = new Parse(emitter);
 
-      return emitter.emit('parse', ['test1'], scripts).then(() => {
+      parse.setProps({
+        globs: ['test1'],
+        json: {
+          data: {
+            scripts,
+          },
+        },
+      });
+
+      return emitter.emit('parse').then(() => {
         const task = parse.getProps().task;
         assert(task[0][0][0].main.name === 'test1');
       });
