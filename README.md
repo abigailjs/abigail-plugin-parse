@@ -25,6 +25,50 @@ No installation
 
 Usage
 ---
+if specify the `'serial'`, glob expand to serial.
+
+```bash
+abby cover:* --parse serial
+# task start cover:*
+# script start cover:test.
+# script end cover:test. exit code 0.
+#
+# script start cover:report.
+# script end cover:report. exit code 0.
+# task end cover:test, cover:report ...
+```
+
+usually expand to parallel.
+
+```bash
+abby cover:*
+# task start cover:*
+# script start cover:test.
+# script start cover:report.
+# ...
+# script end cover:test. exit code 0.
+# script end cover:report. exit code 0.
+# task end cover:test, cover:report ...
+```
+
+if specify in the abigail field of your package.json:
+
+```json
+{
+  "name": "need-serial-run",
+  "scripts": {
+    "test": "ava"
+  },
+  "abigail": {
+    "plugins": {
+      "parse": "serial"
+    }
+  }
+}
+```
+
+Note
+---
 this plugin is parser body. when receiving the `parse` event of abigail.
 currently, the option are undefined. __please don't disable this plugin__, launch doesn't work correctly.
 

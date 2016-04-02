@@ -26,9 +26,33 @@ describe('Parse', () => {
         },
       });
 
-      return emitter.emit('parse').then(() => {
+      return emitter.emit('initialized')
+      .then(() => emitter.emit('parse'))
+      .then(() => {
         const task = parse.getProps().task;
         assert(task[0][0][0].main.name === 'test1');
+      });
+    });
+
+    it('if opts.value is "serial", should process the glob in serial', () => {
+      const emitter = new AsyncEmitter;
+      const parse = new Parse(emitter, 'serial');
+
+      parse.setProps({
+        globs: ['test*'],
+        json: {
+          data: {
+            scripts,
+          },
+        },
+      });
+
+      return emitter.emit('initialized')
+      .then(() => emitter.emit('parse'))
+      .then(() => {
+        const task = parse.getProps().task;
+        assert(task[0][0][0].main.name === 'test1');
+        assert(task[0][1][0].main.name === 'test2');
       });
     });
   });
@@ -134,6 +158,14 @@ describe('Parse', () => {
       assert(task[0][0][0].main.name === 'other');
       assert(task[0][0][0].pre.name === 'preother');
       assert(task[0][0][0].post.name === 'postother');
+      assert(task[1][0][0].main.name === 'test1');
+      assert(task[1][1][0].main.name === 'test2');
+    });
+
+    it('if options.serial is true, should process the glob in serial', () => {
+      const task = Parse.parse(['test*', 'test1', ',', 'test2'], scripts, { serial: true });
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][1][0].main.name === 'test2');
       assert(task[1][0][0].main.name === 'test1');
       assert(task[1][1][0].main.name === 'test2');
     });

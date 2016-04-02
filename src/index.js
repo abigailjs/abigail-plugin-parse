@@ -67,24 +67,31 @@ export default class Parse extends Plugin {
 
   /**
   * @param {string[]} argv - a command line arguments
-  * @param {object} packageScripts - a source npm scripts
+  * @param {object} scripts - a source npm scripts
+  * @param {object} [options] - optional
+  * @param {object} [options.serial] - if ture, process the glob in serial
   * @returns {array} task - the represents the execution order of the script
   *   task[]             - run in parallel
   *   task[][]           - run in serial
   *   task[][][]         - run in parallel
   *   task[][][].scripts - run in serial ({pre, main, post})
   */
-  static parse(argv = [], scripts = {}) {
+  static parse(argv = [], scripts = {}, options = {}) {
     const task = [];
 
     this.normalize(argv).forEach((arg) => {
       const serial = [];
 
       arg.split(',').forEach((pattern) => {
-        const parallel = [];
+        let parallel = [];
 
         for (const key in scripts) {
           if (minimatch(key, pattern)) {
+            if (options.serial && parallel.length) {
+              serial.push(parallel);
+              parallel = [];
+            }
+
             parallel.push(this.createSerial(key, scripts));
           }
         }
@@ -115,17 +122,22 @@ export default class Parse extends Plugin {
   }
 
   /**
-  * @constructor
-  * @extends Plugin
+  * execute only once before the parse
+  * the plugin lifecycle method of plugin via `initialized`
+  *
+  * @method pluginDidInitialize
+  * @returns {undefined}
   */
-  constructor(...args) {
-    super(...args);
-
+  pluginDidInitialize() {
     this.subscribe('parse', () => {
       const props = this.getProps();
       const argv = props.globs;
       const scripts = props.json.data.scripts;
-      const task = this.constructor.parse(argv, scripts);
+
+      const options = {
+        serial: this.opts.value === 'serial',
+      };
+      const task = this.constructor.parse(argv, scripts, options);
       this.setProps({ task });
     });
   }
