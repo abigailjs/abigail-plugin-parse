@@ -79,7 +79,7 @@ import { scripts } from './package.json';
 class YourPlugin extends Plugin {
   pluginWillAttach() {
     const parsePlugin = this.getPlugin('parse');
-    this.setProps({ task: parsePlugin.parse(['test,', 'lint'], scripts) });
+    this.setProps({ task: parsePlugin.parse([['test', 'lint']], scripts) });
   }
 }
 ```
