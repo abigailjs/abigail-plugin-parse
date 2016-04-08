@@ -7,7 +7,7 @@ export default {
   entry: 'src/index.js',
   dest: 'lib/index.js',
   sourceMap: true,
-  format: 'umd',
+  format: 'cjs',
   plugins: [
     nodeResolve({
       skip: ['abigail-plugin'],
