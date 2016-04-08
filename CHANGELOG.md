@@ -1,3 +1,13 @@
+<a name="0.2.1"></a>
+## [0.2.1](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.2.0...v0.2.1) (2016-04-08)
+
+
+### Bug Fixes
+
+* **uglify:** Plugin.name was broken ([90c34de](https://github.com/abigailjs/abigail-plugin-parse/commit/90c34de))
+
+
+
 <a name="0.2.0"></a>
 # [0.2.0](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.1.0...v0.2.0) (2016-04-08)
 
