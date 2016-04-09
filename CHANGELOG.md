@@ -1,3 +1,13 @@
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.3.0...v0.4.0) (2016-04-09)
+
+
+### Features
+
+* **suffixes:** add `run with script` behavior ([5d5d2a0](https://github.com/abigailjs/abigail-plugin-parse/commit/5d5d2a0))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.2.1...v0.3.0) (2016-04-09)
 
