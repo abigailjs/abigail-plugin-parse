@@ -136,7 +136,7 @@ export default class Parse extends Plugin {
           // noop
       }
       const actualOptions = { suffixes, ...this.opts, ...cliOptions };
-      
+
       const task = this.constructor.parse(sentence, scripts, actualOptions);
       this.setProps({ task });
     });
