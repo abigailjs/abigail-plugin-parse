@@ -25,6 +25,9 @@ No installation
 
 Usage
 ---
+
+## switch to expand the glob in serial
+
 if specify the `'serial'`, glob expand to serial.
 
 ```bash
@@ -51,17 +54,40 @@ abby cover:*
 # task end cover:test, cover:report ...
 ```
 
-if specify in the abigail field of your package.json:
+## allow raw script
 
-```json
+if specify value is `raw`, undefined script execute as a raw command.
+
+```bash
+abby 'echo foo' --parse raw
+# task start echo foo.
+# foo
+# ...
+```
+
+use `abigail.plugins.parse` field in `package.json`
+---
+
+```js
 {
-  "name": "need-serial-run",
-  "scripts": {
-    "test": "ava"
-  },
+  // ...
   "abigail": {
     "plugins": {
+      // default parallel
+      "parse": false
+
+      // default serial
       "parse": "serial"
+
+      // allow raw script (default parallel)
+      "parse": "raw"
+
+      // all configuration
+      "parse": {
+        "enable": true,
+        "serial": true,
+        "raw": true
+      }
     }
   }
 }

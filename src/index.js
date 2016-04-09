@@ -62,7 +62,10 @@ export default class Parse extends Plugin {
         }
 
         if (parallel.length === 0) {
-          throw new Error(`no scripts found: ${pattern}`);
+          if (!options.raw) {
+            throw new Error(`no scripts found: ${pattern}`);
+          }
+          serial.push([{ main: new Script(pattern, pattern) }]);
         } else {
           serial.push(parallel);
         }
@@ -99,10 +102,19 @@ export default class Parse extends Plugin {
       const sentence = props.sentence;
       const scripts = props.json.data.scripts;
 
-      const options = {
-        serial: this.opts.value === 'serial',
-      };
-      const task = this.constructor.parse(sentence, scripts, options);
+      const cliOptions = {};
+      switch (this.opts.value) {
+        case 'serial':
+          cliOptions.serial = true;
+          break;
+        case 'raw':
+          cliOptions.raw = true;
+          break;
+        default:
+          // noop
+      }
+      const actualOptions = { ...this.opts, ...cliOptions };
+      const task = this.constructor.parse(sentence, scripts, actualOptions);
       this.setProps({ task });
     });
   }
