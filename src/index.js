@@ -10,24 +10,45 @@ export default class Parse extends Plugin {
   /**
   * @param {string} key - a script name
   * @param {object} scripts - a source npm scripts
+  * @param {object} [options={}] - add extra behavior
+  * @param {string[]} [options.suffixes] - add the arguments to the end of script
   * @returns {object} serial - the matched script with pre and post scripts
   */
-  static createSerial(key, scripts) {
-    const main = new Script(key, scripts[key]);
+  static createSerial(key, scripts, options = {}) {
+    let suffix = '';
+    if (options.suffixes && options.suffixes.length) {
+      suffix = ` ${options.suffixes.join(' ')}`;
+    }
+    const main = new Script(key, scripts[key] + suffix);
 
     const preKey = `pre${key}`;
     let pre;
     if (scripts[preKey]) {
-      pre = new Script(preKey, scripts[preKey]);
+      pre = new Script(preKey, scripts[preKey] + suffix);
     }
 
     const postKey = `post${key}`;
     let post;
     if (scripts[postKey]) {
-      post = new Script(postKey, scripts[postKey]);
+      post = new Script(postKey, scripts[postKey] + suffix);
     }
 
     return { pre, main, post };
+  }
+
+  /**
+  * @param {string} raw - a raw script
+  * @param {object} [options={}] - add extra behavior
+  * @param {string[]} [options.suffixes] - add the arguments to the end of script
+  * @returns {object} serial - the raw script
+  */
+  static createRawScript(raw, options = {}) {
+    let suffix = '';
+    if (options.suffixes && options.suffixes.length) {
+      suffix = ` ${options.suffixes.join(' ')}`;
+    }
+    const main = new Script(raw, raw + suffix);
+    return { main };
   }
 
   /**
@@ -57,7 +78,7 @@ export default class Parse extends Plugin {
               parallel = [];
             }
 
-            parallel.push(this.createSerial(key, scripts));
+            parallel.push(this.createSerial(key, scripts, options));
           }
         }
 
@@ -65,7 +86,7 @@ export default class Parse extends Plugin {
           if (!options.raw) {
             throw new Error(`no scripts found: ${pattern}`);
           }
-          serial.push([{ main: new Script(pattern, pattern) }]);
+          serial.push([this.createRawScript(pattern, options)]);
         } else {
           serial.push(parallel);
         }
@@ -102,6 +123,7 @@ export default class Parse extends Plugin {
       const sentence = props.sentence;
       const scripts = props.json.data.scripts;
 
+      const suffixes = props.scriptSuffixes || [];
       const cliOptions = {};
       switch (this.opts.value) {
         case 'serial':
@@ -113,7 +135,8 @@ export default class Parse extends Plugin {
         default:
           // noop
       }
-      const actualOptions = { ...this.opts, ...cliOptions };
+      const actualOptions = { suffixes, ...this.opts, ...cliOptions };
+      
       const task = this.constructor.parse(sentence, scripts, actualOptions);
       this.setProps({ task });
     });

@@ -63,7 +63,7 @@ describe('Parse', () => {
       const parse = new Parse(emitter, 'raw');
 
       parse.setProps({
-        sentence: [['echo test1']],
+        sentence: [['echo foo']],
         json: {
           data: {
             scripts,
@@ -75,7 +75,33 @@ describe('Parse', () => {
       .then(() => emitter.emit('parse'))
       .then(() => {
         const task = parse.getProps().task;
-        assert(task[0][0][0].main.name === 'echo test1');
+        assert(task[0][0][0].main.name === 'echo foo');
+      });
+    });
+
+    it('if parent.props.scriptSuffixes exists, it should be added to the end of each script', () => {
+      const emitter = new AsyncEmitter;
+      const parse = new Parse(emitter, 'raw');
+
+      parse.setProps({
+        sentence: [['test*'], ['echo foo']],
+        scriptSuffixes: ['--watch', 'me'],
+        json: {
+          data: {
+            scripts,
+          },
+        },
+      });
+
+      return emitter.emit('initialized')
+      .then(() => emitter.emit('parse'))
+      .then(() => {
+        const task = parse.getProps().task;
+        assert(task[0][0][0].main.name === 'test1');
+        assert(task[0][0][0].main.raw === 'echo test1 && exit 0 --watch me');
+        assert(task[0][0][1].main.name === 'test2');
+        assert(task[0][0][1].main.raw === 'echo test2 && exit 1 --watch me');
+        assert(task[1][0][0].main.raw === 'echo foo --watch me');
       });
     });
   });
