@@ -1,3 +1,13 @@
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.2.1...v0.3.0) (2016-04-09)
+
+
+### Features
+
+* **raw:** add `raw` option / wrote document ([c307249](https://github.com/abigailjs/abigail-plugin-parse/commit/c307249))
+
+
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://github.com/abigailjs/abigail-plugin-parse/compare/v0.2.0...v0.2.1) (2016-04-08)
 
