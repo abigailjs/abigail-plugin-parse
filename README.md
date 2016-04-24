@@ -74,7 +74,7 @@ use `abigail.plugins.parse` field in `package.json`
   "abigail": {
     "plugins": {
       // default parallel
-      "parse": false
+      "parse": true
 
       // default serial
       "parse": "serial"
