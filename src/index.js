@@ -13,7 +13,7 @@ export default class Parse extends Plugin {
   */
   static defaultOptions = {
     serial: true,
-    parse: true,
+    raw: true,
   }
 
   /**
