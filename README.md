@@ -73,20 +73,20 @@ use `abigail.plugins.parse` field in `package.json`
   // ...
   "abigail": {
     "plugins": {
-      // default parallel
+      // default allow raw script (default serial)
       "parse": true
 
-      // default serial
-      "parse": "serial"
+      // default parallel
+      "parse": "parallel"
 
-      // allow raw script (default parallel)
-      "parse": "raw"
+      // disallow raw script
+      "parse": "script"
 
       // all configuration
       "parse": {
         "enable": true,
-        "serial": true,
-        "raw": true
+        "serial": false,
+        "raw": false
       }
     }
   }

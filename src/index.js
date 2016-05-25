@@ -8,6 +8,15 @@ import Script from './Script';
 // @class Parse
 export default class Parse extends Plugin {
   /**
+  * @static
+  * @property defaultOptions
+  */
+  static defaultOptions = {
+    serial: true,
+    parse: true,
+  }
+
+  /**
   * @param {string} key - a script name
   * @param {object} scripts - a source npm scripts
   * @param {object} [options={}] - add extra behavior
@@ -129,8 +138,14 @@ export default class Parse extends Plugin {
         case 'serial':
           cliOptions.serial = true;
           break;
+        case 'parallel':
+          cliOptions.serial = false;
+          break;
         case 'raw':
           cliOptions.raw = true;
+          break;
+        case 'script':
+          cliOptions.raw = false;
           break;
         default:
           // noop
