@@ -26,25 +26,12 @@ No installation
 Usage
 ---
 
-## switch to expand the glob in serial
+## switch to expand the glob in parallel
 
-if specify the `'serial'`, glob expand to serial.
-
-```bash
-abby cover:* --parse serial
-# task start cover:*
-# script start cover:test.
-# script end cover:test. exit code 0.
-#
-# script start cover:report.
-# script end cover:report. exit code 0.
-# task end cover:test, cover:report ...
-```
-
-usually expand to parallel.
+if specify the `'parallel'`, glob expand to parallel.
 
 ```bash
-abby cover:*
+abby cover:* --parse parallel
 # task start cover:*
 # script start cover:test.
 # script start cover:report.
@@ -54,14 +41,27 @@ abby cover:*
 # task end cover:test, cover:report ...
 ```
 
-## allow raw script
-
-if specify value is `raw`, undefined script execute as a raw command.
+usually expand to serial.
 
 ```bash
-abby 'echo foo' --parse raw
+abby cover:*
+# task start cover:*
+# script start cover:test.
+# script end cover:test. exit code 0.
+#
+# script start cover:report.
+# script end cover:report. exit code 0.
+# task end cover:test, cover:report ...
+```
+
+## disallow raw script
+
+if specify value is `script`, throws error when undefined script.
+
+```bash
+abby 'echo foo' --parse script
 # task start echo foo.
-# foo
+# Trace: no scripts found: echo foo
 # ...
 ```
 
