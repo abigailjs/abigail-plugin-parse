@@ -80,7 +80,7 @@ export default class Parse extends Plugin {
       patterns.forEach((pattern) => {
         let parallel = [];
 
-        for (const key in scripts) {
+        Object.keys(scripts).forEach(key => {
           if (minimatch(key, pattern)) {
             if (options.serial && parallel.length) {
               serial.push(parallel);
@@ -89,7 +89,7 @@ export default class Parse extends Plugin {
 
             parallel.push(this.createSerial(key, scripts, options));
           }
-        }
+        });
 
         if (parallel.length === 0) {
           if (!options.raw) {
