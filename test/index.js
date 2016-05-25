@@ -1,7 +1,7 @@
 // dependencies
 import AsyncEmitter from 'carrack';
 import flattenDeep from 'lodash.flattendeep';
-import assert from 'power-assert';
+import assert from 'assert';
 import { throws } from 'assert-exception';
 
 // target
@@ -99,8 +99,8 @@ describe('Parse', () => {
         const task = parse.getProps().task;
         assert(task[0][0][0].main.name === 'test1');
         assert(task[0][0][0].main.raw === 'echo test1 && exit 0 --watch me');
-        assert(task[0][0][1].main.name === 'test2');
-        assert(task[0][0][1].main.raw === 'echo test2 && exit 1 --watch me');
+        assert(task[0][1][0].main.name === 'test2');
+        assert(task[0][1][0].main.raw === 'echo test2 && exit 1 --watch me');
         assert(task[1][0][0].main.raw === 'echo foo --watch me');
       });
     });
