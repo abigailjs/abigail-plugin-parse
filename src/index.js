@@ -28,18 +28,18 @@ export default class Parse extends Plugin {
     if (options.suffixes && options.suffixes.length) {
       suffix = ` ${options.suffixes.join(' ')}`;
     }
-    const main = new Script(key, scripts[key] + suffix);
+    const main = new Script(key, scripts[key] + suffix, { suffix });
 
     const preKey = `pre${key}`;
     let pre;
     if (scripts[preKey]) {
-      pre = new Script(preKey, scripts[preKey] + suffix);
+      pre = new Script(preKey, scripts[preKey] + suffix, { suffix });
     }
 
     const postKey = `post${key}`;
     let post;
     if (scripts[postKey]) {
-      post = new Script(postKey, scripts[postKey] + suffix);
+      post = new Script(postKey, scripts[postKey] + suffix, { suffix });
     }
 
     return { pre, main, post };
