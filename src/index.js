@@ -80,14 +80,19 @@ export default class Parse extends Plugin {
       patterns.forEach((pattern) => {
         let parallel = [];
 
+        const [actualPattern, ...suffixes] = pattern.split(' -- ');
         Object.keys(scripts).forEach(key => {
-          if (minimatch(key, pattern)) {
+          if (minimatch(key, actualPattern)) {
             if (options.serial && parallel.length) {
               serial.push(parallel);
               parallel = [];
             }
 
-            parallel.push(this.createSerial(key, scripts, options));
+            const localOptions = {
+              ...options,
+              suffixes: suffixes.concat(options.suffixes || []),
+            };
+            parallel.push(this.createSerial(key, scripts, localOptions));
           }
         });
 

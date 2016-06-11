@@ -103,6 +103,32 @@ describe('plugin lifecycle', () => {
       assert(task[1][0][0].main.raw === 'echo foo --watch me');
     });
   });
+
+  it('if task has `--`, it should be added to the end of task as arguments', () => {
+    const emitter = new AsyncEmitter;
+    const parse = new Parse(emitter, 'raw');
+
+    parse.setProps({
+      sentence: [['test* -- --watch'], ['echo foo']],
+      scriptSuffixes: ['--env', 'experimental'],
+      json: {
+        data: {
+          scripts,
+        },
+      },
+    });
+
+    return emitter.emit('initialized')
+    .then(() => emitter.emit('parse'))
+    .then(() => {
+      const task = parse.getProps().task;
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][0][0].main.raw === 'echo test1 && exit 0 --watch --env experimental');
+      assert(task[0][1][0].main.name === 'test2');
+      assert(task[0][1][0].main.raw === 'echo test2 && exit 1 --watch --env experimental');
+      assert(task[1][0][0].main.raw === 'echo foo --env experimental');
+    });
+  });
 });
 
 describe('.createSerial', () => {
