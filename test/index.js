@@ -12,97 +12,95 @@ import Script from '../src/Script';
 import { scripts } from './fixtures/package.json';
 
 // specs
-describe('Parse', () => {
-  describe('plugin lifecycle', () => {
-    it('if fired `parse`, should be get the globs and scripts, and set the analysis results as the task', () => {
-      const emitter = new AsyncEmitter;
-      const parse = new Parse(emitter);
+describe('plugin lifecycle', () => {
+  it('if fired `parse`, should be get the globs and scripts, and set the analysis results as the task', () => {
+    const emitter = new AsyncEmitter;
+    const parse = new Parse(emitter);
 
-      parse.setProps({
-        sentence: [['test1']],
-        json: {
-          data: {
-            scripts,
-          },
+    parse.setProps({
+      sentence: [['test1']],
+      json: {
+        data: {
+          scripts,
         },
-      });
-
-      return emitter.emit('initialized')
-      .then(() => emitter.emit('parse'))
-      .then(() => {
-        const task = parse.getProps().task;
-        assert(task[0][0][0].main.name === 'test1');
-      });
+      },
     });
 
-    it('if opts.value is "serial", should process the glob in serial', () => {
-      const emitter = new AsyncEmitter;
-      const parse = new Parse(emitter, 'serial');
+    return emitter.emit('initialized')
+    .then(() => emitter.emit('parse'))
+    .then(() => {
+      const task = parse.getProps().task;
+      assert(task[0][0][0].main.name === 'test1');
+    });
+  });
 
-      parse.setProps({
-        sentence: [['test*']],
-        json: {
-          data: {
-            scripts,
-          },
+  it('if opts.value is "serial", should process the glob in serial', () => {
+    const emitter = new AsyncEmitter;
+    const parse = new Parse(emitter, 'serial');
+
+    parse.setProps({
+      sentence: [['test*']],
+      json: {
+        data: {
+          scripts,
         },
-      });
-
-      return emitter.emit('initialized')
-      .then(() => emitter.emit('parse'))
-      .then(() => {
-        const task = parse.getProps().task;
-        assert(task[0][0][0].main.name === 'test1');
-        assert(task[0][1][0].main.name === 'test2');
-      });
+      },
     });
 
-    // eslint-disable-next-line quotes
-    it(`if opts.value is "raw", and script doesn't exist, should handle the script as a shell command`, () => {
-      const emitter = new AsyncEmitter;
-      const parse = new Parse(emitter, 'raw');
+    return emitter.emit('initialized')
+    .then(() => emitter.emit('parse'))
+    .then(() => {
+      const task = parse.getProps().task;
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][1][0].main.name === 'test2');
+    });
+  });
 
-      parse.setProps({
-        sentence: [['echo foo']],
-        json: {
-          data: {
-            scripts,
-          },
+  // eslint-disable-next-line quotes
+  it(`if opts.value is "raw", and script doesn't exist, should handle the script as a shell command`, () => {
+    const emitter = new AsyncEmitter;
+    const parse = new Parse(emitter, 'raw');
+
+    parse.setProps({
+      sentence: [['echo foo']],
+      json: {
+        data: {
+          scripts,
         },
-      });
-
-      return emitter.emit('initialized')
-      .then(() => emitter.emit('parse'))
-      .then(() => {
-        const task = parse.getProps().task;
-        assert(task[0][0][0].main.name === 'echo foo');
-      });
+      },
     });
 
-    it('if parent.props.scriptSuffixes exists, it should be added to the end of each script', () => {
-      const emitter = new AsyncEmitter;
-      const parse = new Parse(emitter, 'raw');
+    return emitter.emit('initialized')
+    .then(() => emitter.emit('parse'))
+    .then(() => {
+      const task = parse.getProps().task;
+      assert(task[0][0][0].main.name === 'echo foo');
+    });
+  });
 
-      parse.setProps({
-        sentence: [['test*'], ['echo foo']],
-        scriptSuffixes: ['--watch', 'me'],
-        json: {
-          data: {
-            scripts,
-          },
+  it('if parent.props.scriptSuffixes exists, it should be added to the end of each script', () => {
+    const emitter = new AsyncEmitter;
+    const parse = new Parse(emitter, 'raw');
+
+    parse.setProps({
+      sentence: [['test*'], ['echo foo']],
+      scriptSuffixes: ['--watch', 'me'],
+      json: {
+        data: {
+          scripts,
         },
-      });
+      },
+    });
 
-      return emitter.emit('initialized')
-      .then(() => emitter.emit('parse'))
-      .then(() => {
-        const task = parse.getProps().task;
-        assert(task[0][0][0].main.name === 'test1');
-        assert(task[0][0][0].main.raw === 'echo test1 && exit 0 --watch me');
-        assert(task[0][1][0].main.name === 'test2');
-        assert(task[0][1][0].main.raw === 'echo test2 && exit 1 --watch me');
-        assert(task[1][0][0].main.raw === 'echo foo --watch me');
-      });
+    return emitter.emit('initialized')
+    .then(() => emitter.emit('parse'))
+    .then(() => {
+      const task = parse.getProps().task;
+      assert(task[0][0][0].main.name === 'test1');
+      assert(task[0][0][0].main.raw === 'echo test1 && exit 0 --watch me');
+      assert(task[0][1][0].main.name === 'test2');
+      assert(task[0][1][0].main.raw === 'echo test2 && exit 1 --watch me');
+      assert(task[1][0][0].main.raw === 'echo foo --watch me');
     });
   });
 });
