@@ -21,6 +21,7 @@ export default class Parse extends Plugin {
   * @param {object} scripts - a source npm scripts
   * @param {object} [options={}] - add extra behavior
   * @param {string[]} [options.suffixes] - add the arguments to the end of script
+  * @param {string[]} [options.require] - transform script to `node --require relative/path/{script}` if first argument is node cli
   * @returns {object} serial - the matched script with pre and post scripts
   */
   static createSerial(key, scripts, options = {}) {
@@ -28,18 +29,19 @@ export default class Parse extends Plugin {
     if (options.suffixes && options.suffixes.length) {
       suffix = ` ${options.suffixes.join(' ')}`;
     }
-    const main = new Script(key, scripts[key] + suffix, { suffix });
+    const meta = { suffix };
+    const main = new Script(key, scripts[key] + suffix, options, meta);
 
     const preKey = `pre${key}`;
     let pre;
     if (scripts[preKey]) {
-      pre = new Script(preKey, scripts[preKey] + suffix, { suffix });
+      pre = new Script(preKey, scripts[preKey] + suffix, options, meta);
     }
 
     const postKey = `post${key}`;
     let post;
     if (scripts[postKey]) {
-      post = new Script(postKey, scripts[postKey] + suffix, { suffix });
+      post = new Script(postKey, scripts[postKey] + suffix, options, meta);
     }
 
     return { pre, main, post };

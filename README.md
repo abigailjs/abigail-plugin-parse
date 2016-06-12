@@ -65,6 +65,15 @@ abby 'echo foo' --parse script
 # ...
 ```
 
+## `node --require` transform (experimental)
+
+if specify `--parse.require module-name`, transform node-cli to `node --require module-name` execution.
+
+```bash
+# use configuration es6-syntax at node-v6 with es2015-modules(using reify)
+abby 'pug-cli index.styl --obj pug.config.es6' --parse.require reify
+```
+
 use `abigail.plugins.parse` field in `package.json`
 ---
 
@@ -86,7 +95,8 @@ use `abigail.plugins.parse` field in `package.json`
       "parse": {
         "enable": true,
         "serial": false,
-        "raw": false
+        "raw": false,
+        "require": false,
       }
     }
   }

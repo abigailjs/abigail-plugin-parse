@@ -196,4 +196,9 @@ describe('.parse', () => {
     assert(task[1][0][0].main.name === 'test1');
     assert(task[1][1][0].main.name === 'test2');
   });
+
+  it('if specify options.require, should transform node-cli to `node --require` execution', () => {
+    const task = Parse.parse([['mocha']], scripts, { require: 'reify' });
+    assert(task[0][0][0].main.raw === 'node --require reify node_modules/.bin/mocha');
+  });
 });
