@@ -8,10 +8,10 @@ export default {
   sourceMap: true,
   format: 'cjs',
   plugins: [
+    babel(),
     nodeResolve({
       skip: ['abigail-plugin'],
     }),
     commonjs(),
-    babel(),
   ],
 };
