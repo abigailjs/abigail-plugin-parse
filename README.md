@@ -71,7 +71,8 @@ if specify `--parse.require module-name`, transform node-cli to `node --require 
 
 ```bash
 # use configuration es6-syntax at node-v6 with es2015-modules(using reify)
-abby 'pug-cli index.styl --obj pug.config.es6' --parse.require reify
+abby 'pug index.styl --obj pug.config.es6' --parse.require reify
+# run `node --require reify node_modules/.bin/pug index.styl --obj pug.config.es6`
 ```
 
 use `abigail.plugins.parse` field in `package.json`
