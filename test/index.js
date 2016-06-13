@@ -3,7 +3,6 @@ import AsyncEmitter from 'carrack';
 import flattenDeep from 'lodash.flattendeep';
 import assert from 'assert';
 import { throws } from 'assert-exception';
-import npmRunPath from 'npm-run-path';
 
 // target
 import Parse from '../src';
