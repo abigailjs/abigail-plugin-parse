@@ -131,24 +131,6 @@ describe('plugin lifecycle', () => {
   });
 });
 
-describe('.createSerial', () => {
-  it('should return the match to script in the Script instance to the `main`', () => {
-    const { main } = Parse.createSerial('test1', scripts);
-    assert(main instanceof Script);
-    assert(main.name === 'test1');
-  });
-
-  it('if `pre` / `post` exists, it should be returned to the same name of the field', () => {
-    const { main, pre, post } = Parse.createSerial('other', scripts);
-    assert(main instanceof Script);
-    assert(main.name === 'other');
-    assert(pre instanceof Script);
-    assert(pre.name === 'preother');
-    assert(post instanceof Script);
-    assert(post.name === 'postother');
-  });
-});
-
 describe('.parse', () => {
   it('should return the script to match the name in a 3d array', () => {
     const task = Parse.parse([['test1']], scripts);
@@ -199,7 +181,33 @@ describe('.parse', () => {
 
   it('if specify options.require, should transform node-cli to `node --require` execution', () => {
     setPath(`${__dirname}/fixtures`);
-    const task = Parse.parse([['node-bin']], scripts, { require: 'reify' });
+    const task = Parse.parse([['work-on-node6']], scripts, { require: 'reify' });
+    assert(task[0][0][0].main.raw === 'node --require reify test/fixtures/node_modules/.bin/node-bin');
+  });
+});
+
+describe('.createSerial', () => {
+  it('should return the match to script in the Script instance to the `main`', () => {
+    const { main } = Parse.createSerial('test1', scripts);
+    assert(main instanceof Script);
+    assert(main.name === 'test1');
+  });
+
+  it('if `pre` / `post` exists, it should be returned to the same name of the field', () => {
+    const { main, pre, post } = Parse.createSerial('other', scripts);
+    assert(main instanceof Script);
+    assert(main.name === 'other');
+    assert(pre instanceof Script);
+    assert(pre.name === 'preother');
+    assert(post instanceof Script);
+    assert(post.name === 'postother');
+  });
+});
+
+describe('.createRawScript', () => {
+  it('if specify options.require, should transform node-cli to `node --require` execution', () => {
+    setPath(`${__dirname}/fixtures`);
+    const task = Parse.parse([['node-bin']], scripts, { require: 'reify', raw: true });
     assert(task[0][0][0].main.raw === 'node --require reify test/fixtures/node_modules/.bin/node-bin');
   });
 });

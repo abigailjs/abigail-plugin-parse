@@ -64,7 +64,8 @@ export default class Parse extends Plugin {
     if (options.suffixes && options.suffixes.length) {
       suffix = ` ${options.suffixes.join(' ')}`;
     }
-    const main = new Script(raw, raw + suffix);
+    const meta = { suffix };
+    const main = new Script(raw, raw + suffix, options, meta);
     return { main };
   }
 

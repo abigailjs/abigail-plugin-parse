@@ -6,6 +6,6 @@
     "preother": "echo preother && exit 3",
     "other": "echo other && exit 4",
     "postother": "echo postother && exit 5",
-    "node-bin": "node-bin"
+    "work-on-node6": "node-bin"
   }
 }
