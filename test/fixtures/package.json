@@ -6,6 +6,6 @@
     "preother": "echo preother && exit 3",
     "other": "echo other && exit 4",
     "postother": "echo postother && exit 5",
-    "mocha": "mocha"
+    "node-bin": "node-bin"
   }
 }

@@ -3,10 +3,11 @@ import AsyncEmitter from 'carrack';
 import flattenDeep from 'lodash.flattendeep';
 import assert from 'assert';
 import { throws } from 'assert-exception';
+import npmRunPath from 'npm-run-path';
 
 // target
 import Parse from '../src';
-import Script from '../src/Script';
+import Script, { setPath } from '../src/Script';
 
 // fixture
 import { scripts } from './fixtures/package.json';
@@ -198,7 +199,8 @@ describe('.parse', () => {
   });
 
   it('if specify options.require, should transform node-cli to `node --require` execution', () => {
-    const task = Parse.parse([['mocha']], scripts, { require: 'reify' });
-    assert(task[0][0][0].main.raw === 'node --require reify node_modules/.bin/mocha');
+    setPath(`${__dirname}/fixtures`);
+    const task = Parse.parse([['node-bin']], scripts, { require: 'reify' });
+    assert(task[0][0][0].main.raw === 'node --require reify test/fixtures/node_modules/.bin/node-bin');
   });
 });

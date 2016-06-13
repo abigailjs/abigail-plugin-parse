@@ -16,6 +16,12 @@ export default class Parse extends Plugin {
     raw: true,
   }
 
+  // fix uglify function.name
+  constructor(...args) {
+    super(...args);
+    this.name = 'parse';
+  }
+
   /**
   * @param {string} key - a script name
   * @param {object} scripts - a source npm scripts

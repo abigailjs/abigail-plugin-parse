@@ -1,6 +1,12 @@
 import { parse, quote } from 'shell-quote';
 import which from 'which';
+import npmRunPath from 'npm-run-path';
 import { relative as relativePaths } from 'path';
+
+export const whichOptions = { path: npmRunPath() };
+export function setPath(cwd) {
+  whichOptions.path = npmRunPath({ cwd });
+}
 
 export default class Script {
   constructor(name, raw, options = {}, meta = {}) {
@@ -18,8 +24,7 @@ export default class Script {
   transformRawScript(moduleName) {
     const bin = this.parsed[0];
     try {
-      // FIXME: failure process.cwd() in package.json lower directory in abigail-v1.8.0
-      const resolvedBin = relativePaths(process.cwd(), which.sync(bin));
+      const resolvedBin = relativePaths(process.cwd(), which.sync(bin, whichOptions));
       const isNodeCLI = resolvedBin.split('/').slice(-2, -1)[0] === '.bin';
       if (isNodeCLI) {
         this.parsed = ['node', '--require', moduleName, resolvedBin].concat(this.parsed.slice(1));
